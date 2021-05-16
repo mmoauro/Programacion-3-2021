@@ -14,15 +14,16 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override
     public void agregarVertice(int verticeId) {
-        // Puede tener vertices duplicados?
-        this.vertices.add(verticeId);
+        if (!this.vertices.contains(verticeId))
+            this.vertices.add(verticeId);
 
     }
 
     @Override
     public void borrarVertice(int verticeId) {
         // Primero borro todos los arcos del vertice a borrar.
-        for (Arco<T> arco : this.arcos) {
+        for (int i = 0; i < this.arcos.size(); i++) {
+            Arco<T> arco = this.arcos.get(i);
             if (arco.getVerticeOrigen() == verticeId || arco.getVerticeDestino() == verticeId)
                 this.borrarArco(verticeId, arco.getVerticeDestino());
         }
