@@ -3,38 +3,16 @@ package P3;
 public class Main {
 
     public static void main(String[] args) {
-        /*
 
-        // Creo un grafo dirigdo donde las etiquetas de los arcos son valores Float
-        GrafoDirigido<Float> grafito = new GrafoDirigido<>();
-
-        // Agrego los vertices 1 y 2
-        grafito.agregarVertice(1);
-        grafito.agregarVertice(2);
-        grafito.agregarVertice(6);
-        grafito.agregarVertice(120);
-
-        // Genero un arco desde 1 hasta 2 con el valor de etiqueta 3
-        grafito.agregarArco(1, 2, 3F);
-        grafito.agregarArco(2, 1, 2F);
-        grafito.agregarArco(2, 120, 2F);
-
-        // Obtengo el arco entre 1 y 2, y le pido la etiqueta
-        Float etiqueta = grafito.obtenerArco(1, 2).getEtiqueta();
-
-        System.out.println(etiqueta); // Debería imprimir 3
-        DFS dfs = new DFS(grafito);
-        System.out.println(dfs.dfs());
-         */
         Mapa mapa = new Mapa();
-        Ciudad tandil = new Ciudad("Tandil", 10, true, true, 15);
-        Ciudad mardel = new Ciudad("Mar del plata", 10, true, true, 15);
-        Ciudad rauch = new Ciudad("Rauch", 10, true, true, 15);
-        Ciudad bolivar = new Ciudad("Bolivar", 10, true, true, 15);
-        Ciudad olavarria = new Ciudad("Olavarria", 10, true, true, 15);
-        Ciudad ayacucho = new Ciudad("Ayacucho", 10, true, true, 15);
-        Ciudad pehuajo = new Ciudad("Pehuajo", 10, true, true, 15);
-        Ciudad azul = new Ciudad("Azul", 10, true, true, 15);
+        Ciudad tandil = new Ciudad(1,"Tandil", 6, true, true, 5);
+        Ciudad mardel = new Ciudad(2,"Mar del plata", 15, true, false, 12);
+        Ciudad rauch = new Ciudad(3,"Rauch", 1, false, true, 0);
+        Ciudad bolivar = new Ciudad(4,"Bolivar", 7, false, false, 4);
+        Ciudad olavarria = new Ciudad(5,"Olavarria", 9, true, false, 17);
+        Ciudad ayacucho = new Ciudad(6,"Ayacucho", 1, false, false, 5);
+        Ciudad pehuajo = new Ciudad(7,"Pehuajo", 3, true, true, 5);
+        Ciudad azul = new Ciudad(8,"Azul", 4, false, true, 4);
 
 
 
@@ -48,17 +26,30 @@ public class Main {
         mapa.addCiudad(pehuajo);
 
         mapa.agregarRuta(azul, bolivar, 100);
-        mapa.agregarRuta(bolivar, pehuajo, 100);
-        mapa.agregarRuta(bolivar, olavarria, 100);
-        mapa.agregarRuta(olavarria, rauch, 100);
-        mapa.agregarRuta(olavarria, tandil, 100);
-        mapa.agregarRuta(rauch, ayacucho, 100);
-        mapa.agregarRuta(tandil, mardel, 100);
-        mapa.agregarRuta(tandil, ayacucho, 100);
-        mapa.agregarRuta(tandil, rauch, 100);
-        mapa.agregarRuta(ayacucho, pehuajo, 100);
+        mapa.agregarRuta(bolivar, pehuajo, 70);
+        mapa.agregarRuta(bolivar, olavarria, 140);
+        mapa.agregarRuta(olavarria, rauch, 210);
+        mapa.agregarRuta(olavarria, tandil, 130);
+        mapa.agregarRuta(rauch, ayacucho, 50);
+        mapa.agregarRuta(tandil, mardel, 200);
+        mapa.agregarRuta(tandil, ayacucho, 70);
+        mapa.agregarRuta(tandil, rauch, 60);
+        mapa.agregarRuta(ayacucho, pehuajo, 540);
 
-        System.out.println(mapa.obtenerRutas(pehuajo, azul));
+        /*
+        origen: Azul - destino: Ayacucho
+        origen: Rauch - destino: Mar del plata
+        origen: Mar del plata - destino: Pehuajo
+        eliminar la ciudad Ayacucho.
+        eliminar la ruta Tandil - Rauch
+        origen: Mar del plata - destino Pehuajo
+         */
+        System.out.println(mapa.obtenerRutaMasCorta(azul, ayacucho));
+        System.out.println(mapa.obtenerRutaMasCorta(rauch, mardel));
+        System.out.println(mapa.obtenerRutaMasCorta(mardel, pehuajo));
+        mapa.borrarCiudad(ayacucho);
+        mapa.borrarRuta(tandil, rauch);
+        System.out.println(mapa.obtenerRutaMasCorta(mardel, pehuajo));
 
     }
 

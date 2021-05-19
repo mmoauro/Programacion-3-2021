@@ -1,7 +1,6 @@
 package P3;
 
 public class Ciudad {
-    private static int idGenereal; // Es para que no hayan id's repetidos.
     private final int id;
     private String nombre;
     private int estacionesDeServicio;
@@ -9,16 +8,16 @@ public class Ciudad {
     private boolean tieneRadares;
     private int talleresMecanicos;
 
-    public Ciudad(String nombre, int estacionesDeServicio, boolean tieneBalanza, boolean tieneRadares, int talleresMecanicos) {
+    public Ciudad(int id, String nombre, int estacionesDeServicio, boolean tieneBalanza, boolean tieneRadares, int talleresMecanicos) {
         this.nombre = nombre;
         this.estacionesDeServicio = estacionesDeServicio;
         this.tieneBalanza = tieneBalanza;
         this.tieneRadares = tieneRadares;
         this.talleresMecanicos = talleresMecanicos;
-        this.id = idGenereal;
-        idGenereal++;
+        this.id = id;
     }
 
+    // Todos O(1)
     public String getNombre() {
         return nombre;
     }

@@ -13,6 +13,7 @@ public class DFS {
         this.colores = new HashMap<>();
     }
 
+    // O(n) -> n = Cantidad de vertices que tiene el grafo.
     private void pintarVerticesDeBlanco () {
         // Por cada vertice..
         Iterator<Integer> it = grafo.obtenerVertices();
@@ -23,82 +24,28 @@ public class DFS {
         }
     }
 
-    public ArrayList<Integer> dfs () {
+    public ArrayList<ArrayList<Integer>> obtenerRutas(int verticeOrigen, int verticeDestino) {
         this.pintarVerticesDeBlanco();
-        Iterator<Integer> it = grafo.obtenerVertices();
-        ArrayList<Integer> retorno = new ArrayList<>();
-        while (it.hasNext()) {
-            int verticeId = it.next();
-            if (this.colores.get(verticeId).equals("Blanco"))
-                retorno.addAll(dfs_visit(verticeId)); // Es lo mismo que llamar a dfs_visit pasando retorno como parametro.
-        }
-        return retorno;
+        ArrayList<Integer> ruta = new ArrayList<>();
+        ruta.add(verticeOrigen);
+        return obtenerTodasLasRutas(verticeOrigen, verticeDestino, ruta, new ArrayList<>());
     }
 
-    private ArrayList<Integer> dfs_visit (int verticeId) {
-        ArrayList<Integer> retorno = new ArrayList<>();
-        retorno.add(verticeId);
-        this.colores.put(verticeId, "Amarillo");
-        Iterator<Integer> it = this.grafo.obtenerAdyacentes(verticeId);
-        while (it.hasNext()) {
-            int adyId = it.next();
-            if (this.colores.get(adyId).equals("Blanco"))
-                retorno.addAll(dfs_visit(adyId));
-        }
-        this.colores.put(verticeId, "Negro");
-        return retorno;
-    }
+    private ArrayList<ArrayList<Integer>> obtenerTodasLasRutas(Integer verticeOrigen, Integer verticeDestino, ArrayList<Integer> ruta, ArrayList<ArrayList<Integer>> retorno)  {
 
-    public boolean tieneCamino (int verticeOrigen, int verticeDestino) {
-        this.pintarVerticesDeBlanco();
-        return this.dfs_visit(verticeOrigen).contains(verticeDestino); // Es mas simple que llamar a buscarCamino pero mas costoso.
-    }
-
-    public ArrayList<Integer> obtenerCamino (int verticeOrigen, int verticeDestino) {
-        this.pintarVerticesDeBlanco();
-        return this.buscarCamino(verticeOrigen, verticeDestino, verticeOrigen);
-    }
-
-    private ArrayList<Integer> buscarCamino (int verticeOrigen, int verticeDestino, int verticeOrigenOriginal) {
-        ArrayList<Integer> retorno = new ArrayList<>();
-        if (verticeDestino == verticeOrigen) {
-            retorno.add(verticeOrigen);
-            return retorno;
-        }
+        if (verticeOrigen.equals(verticeDestino))
+            retorno.add(new ArrayList<>(ruta));
         this.colores.put(verticeOrigen, "Amarillo");
-        Iterator<Integer> it = this.grafo.obtenerAdyacentes(verticeOrigen);
-        while (it.hasNext()) {
-            int adyId = it.next();
-            if (this.colores.get(adyId).equals("Blanco") && adyId != verticeOrigenOriginal) {
-                ArrayList<Integer> camino = this.buscarCamino(adyId, verticeDestino, verticeOrigenOriginal);
-                if (camino.size() > 0) {
-                    retorno.add(verticeOrigen);
-                    retorno.addAll(camino);
-                }
-            }
-        }
-        this.colores.put(verticeOrigen, "Negro");
-        return retorno;
-    }
 
-    public ArrayList<ArrayList<Integer>> obtenerTodasLasRutas (int verticeOrigen, int verticeDestino) {
-        //this.pintarVerticesDeBlanco();
-        ArrayList<ArrayList<Integer>> retorno = new ArrayList<>();
-        Iterator<Integer> adyacentes = this.grafo.obtenerAdyacentes(verticeOrigen);
-        //retorno.add(this.buscarCamino(verticeOrigen, verticeDestino));
-        while (adyacentes.hasNext()) {
-            this.pintarVerticesDeBlanco();
-            int id = adyacentes.next();
-            Iterator<Integer> adyacentes1 = this.grafo.obtenerAdyacentes(id);
-            while (adyacentes1.hasNext()) {
-                int id1 = adyacentes1.next();
-                this.pintarVerticesDeBlanco();
-                ArrayList<Integer> ruta = this.buscarCamino(id1, verticeDestino, verticeOrigen);
-                if (!retorno.contains(ruta)) {
-                    retorno.add(ruta);
-                }
+        for (Iterator<Integer> it = this.grafo.obtenerAdyacentes(verticeOrigen); it.hasNext(); ) {
+            Integer idAdyacente = it.next();
+            if (this.colores.get(idAdyacente).equals("Blanco")) {
+                ruta.add(idAdyacente);
+                obtenerTodasLasRutas(idAdyacente, verticeDestino, ruta, retorno);
+                ruta.remove(idAdyacente);
             }
         }
+        this.colores.put(verticeOrigen, "Blanco");
         return retorno;
     }
 }

@@ -1,11 +1,7 @@
 package entregable2.src;
 
-import P1.LinkedList;
-import P1.Node;
-
 public class Main {
     public static void main(String[] args) {
-
 
         int[] valoresIniciales = new int[] {15, 4, 1, 25, 50, 6, 7, 20, 5, 30};
         Tree miArbol = new Tree(valoresIniciales);
