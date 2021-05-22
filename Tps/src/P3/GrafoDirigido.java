@@ -6,6 +6,7 @@ import java.util.Iterator;
 public class GrafoDirigido<T> implements Grafo<T> {
     private ArrayList<Integer> vertices;
     private ArrayList<Arco<T>> arcos;
+    // TODO: Pasar a HashMap.
 
     public GrafoDirigido () {
         this.vertices = new ArrayList<>();
