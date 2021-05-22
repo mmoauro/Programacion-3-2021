@@ -35,11 +35,6 @@ public class Mapa {
         this.grafo.borrarArco(origen.getId(), destino.getId());
     }
 
-    public DFS dfs () {
-        return new DFS(this.grafo);
-    }
-
-
     public ArrayList<String> obtenerRutaMasCorta(Ciudad origen, Ciudad destino) {
         ArrayList<Integer> ruta = this.privateObtenerRutaMasCorta(origen, destino);
         ArrayList<String> retorno = new ArrayList<>();
@@ -76,6 +71,7 @@ public class Mapa {
 
     // O(n ^ n)???
     private ArrayList<Integer> privateObtenerRutaMasCorta(Ciudad origen, Ciudad destino, ArrayList<Integer> ruta, ArrayList<Integer> retorno, int cuentaBalanzas)  {
+        // La ciudad de destino no cuenta en el contado de balanzas.
         this.colores.put(origen.getId(), "Amarillo");
         if (origen.getId() == destino.getId()) { // Legue al destino.
             retorno.removeAll(retorno);
