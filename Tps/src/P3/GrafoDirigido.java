@@ -11,64 +11,71 @@ public class GrafoDirigido<T> implements Grafo<T> {
         this.vertices = new HashMap<>();
     }
 
+    // O(1). No se la complejidad del metodo containsKey. La complejidad de agregarVertice(vertice) depende de ese metodo.
     @Override
     public void agregarVertice(int verticeId) {
         if (!this.vertices.containsKey(verticeId))
             this.vertices.put(verticeId, new ArrayList<>());
     }
 
+    // O(n * a) -> n = Cantidad de vertices. a = Cantidad de arcos por cada vertice.
     @Override
     public void borrarVertice(int verticeId) {
         // Por cada vertice borro los arcos que se dirijan al vertice a borrar.
         for (int idVertice : this.vertices.keySet()) {
-            this.vertices.get(idVertice).removeIf(arco -> arco.getVerticeDestino() == verticeId);
+            this.vertices.get(idVertice).removeIf(arco -> arco.getVerticeDestino() == verticeId); // O(n)
         }
         // Una vez que borro todos los arcos de ese vertice puedo borrar el vertice.
         this.vertices.remove(verticeId);
     }
 
+    // O(n) -> n = Cantidad de arcos que tiene el vertice.
     @Override
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
         Arco<T> arco = new Arco<T>(verticeId1, verticeId2, etiqueta);
-        if (!this.vertices.get(verticeId1).contains(arco))
+        if (!this.vertices.get(verticeId1).contains(arco)) // O(n)
             this.vertices.get(verticeId1).add(arco);
     }
 
+    // O(n) -> n = Cantidad de arcos que tiene el verticeId1
     @Override
     public void borrarArco(int verticeId1, int verticeId2) {
         this.vertices.get(verticeId1).removeIf(arco -> arco.getVerticeDestino() == verticeId2);
     }
 
+    // O(1)
     @Override
     public boolean contieneVertice(int verticeId) {
         return this.vertices.containsKey(verticeId);
     }
 
+    // O(n) -> n = Cantidad de arcos que tiene el verticeId1
     @Override
     public boolean existeArco(int verticeId1, int verticeId2) {
         for (Arco<T> arco : this.vertices.get(verticeId1)) {
-            if (arco.getVerticeDestino() == verticeId2) {
+            if (arco.getVerticeDestino() == verticeId2)
                 return true;
-            }
         }
         return false;
     }
 
+    // O(n) -> n = Cantidad de arcos que tiene el verticeId1
     @Override
     public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
         for (Arco<T> arco : this.vertices.get(verticeId1)) {
-            if (arco.getVerticeDestino() == verticeId2) {
+            if (arco.getVerticeDestino() == verticeId2)
                 return arco;
-            }
         }
         return null;
     }
 
+    // O(1)
     @Override
     public int cantidadVertices() {
         return this.vertices.size();
     }
 
+    // O(n) -> n = Cantidad de vertices. Asumo que el el metodo size() de ArrayList es O(1).
     @Override
     public int cantidadArcos() {
         int total = 0;
@@ -77,11 +84,13 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return total;
     }
 
+    // O(1). No se la complejidad de los metodos que llamo.
     @Override
     public Iterator<Integer> obtenerVertices() {
         return this.vertices.keySet().iterator();
     }
 
+    // O(n) -> n = Cantidad de arcos del vertice.
     @Override
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
         ArrayList<Integer> adyacentes = new ArrayList<>();
@@ -91,6 +100,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return adyacentes.iterator();
     }
 
+    // O(n) -> n = Cantidad de vertices.
     @Override
     public Iterator<Arco<T>> obtenerArcos() {
         ArrayList<Arco<T>> retorno = new ArrayList<>();
@@ -99,6 +109,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return retorno.iterator();
     }
 
+    // O(1)
     @Override
     public Iterator<Arco<T>> obtenerArcos(int verticeId) {
         return this.vertices.get(verticeId).iterator();

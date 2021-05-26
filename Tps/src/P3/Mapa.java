@@ -15,40 +15,41 @@ public class Mapa {
         this.colores = new HashMap<>();
     }
 
+    // O(1)
     public void addCiudad (Ciudad ciudad) {
         this.ciudades.put(ciudad.getId(), ciudad);
         this.grafo.agregarVertice(ciudad.getId());
     }
 
+    // O(n) -> n = Cantidad de arcos que tiene el origen.
     public void agregarRuta (Ciudad origen, Ciudad destino, int distancia) {
         if (this.ciudades.containsKey(origen.getId()) && this.ciudades.containsKey(destino.getId())) {
             this.grafo.agregarArco(origen.getId(), destino.getId(), distancia);
         }
     }
 
+    // O(n * a) -> Es lo que demora el metodo borrarVertice del grafo.
     public void borrarCiudad (Ciudad ciudad) {
         this.grafo.borrarVertice(ciudad.getId());
         this.ciudades.remove(ciudad.getId());
     }
 
+    // O(n) -> Es lo que demora el metood borrarArco del grafo.
     public void borrarRuta (Ciudad origen, Ciudad destino) {
         this.grafo.borrarArco(origen.getId(), destino.getId());
     }
 
+    // O(n ^ n) -> n = Cantidad de vertices del grafo.
     public ArrayList<String> obtenerRutaMasCorta(Ciudad origen, Ciudad destino) {
         ArrayList<Integer> ruta = this.privateObtenerRutaMasCorta(origen, destino);
         ArrayList<String> retorno = new ArrayList<>();
-        for (Integer r : ruta)
+        for (Integer r : ruta) // O(n) -> n = ruta.size()
             retorno.add(this.ciudades.get(r).getNombre());
-        return retorno.size() > 0 ? retorno : null;
-    }
-
-    private int getDistanciaRuta (ArrayList<Integer> ruta) {
-        int distancia = 0;
-        for (int i = 0; i < ruta.size() - 1; i++) {
-            distancia += this.grafo.obtenerArco(ruta.get(i), ruta.get(i+1)).getEtiqueta();
+        if (retorno.size() > 0) {
+            retorno.add("Distancia de la ruta: " + this.getDistanciaRuta(ruta) + " km");
+            return retorno;
         }
-        return distancia;
+        return null;
     }
 
     // O(n) -> n = Cantidad de vertices que tiene el grafo.
@@ -62,14 +63,16 @@ public class Mapa {
         }
     }
 
+    // O(n ^ n) -> n = Cantidad de vertices del grafo.
     private ArrayList<Integer> privateObtenerRutaMasCorta(Ciudad origen, Ciudad destino) {
         this.pintarVerticesDeBlanco();
         ArrayList<Integer> ruta = new ArrayList<>();
         ruta.add(origen.getId());
-        return privateObtenerRutaMasCorta(origen, destino, ruta, new ArrayList<>(), 0);
+        // Cuento la ciudad de origen para el conteo de balanzas y la ciudad de destino no.
+        return privateObtenerRutaMasCorta(origen, destino, ruta, new ArrayList<>(), origen.isTieneBalanza() ? 1 : 0);
     }
 
-    // O(n ^ n)???
+    // O(n ^ n) -> n = Cantidad de vertices del grafo.
     private ArrayList<Integer> privateObtenerRutaMasCorta(Ciudad origen, Ciudad destino, ArrayList<Integer> ruta, ArrayList<Integer> retorno, int cuentaBalanzas)  {
         // La ciudad de destino no cuenta en el contado de balanzas.
         this.colores.put(origen.getId(), "Amarillo");
@@ -93,5 +96,14 @@ public class Mapa {
         }
         this.colores.put(origen.getId(), "Blanco");
         return retorno;
+    }
+
+    // O(n * a) -> n = Cantidad de vertices por los que pasa la ruta. a = Cantidad de arcos que tiene cada vertice de la ruta.
+    private int getDistanciaRuta (ArrayList<Integer> ruta) {
+        int distancia = 0;
+        for (int i = 0; i < ruta.size() - 1; i++) {
+            distancia += this.grafo.obtenerArco(ruta.get(i), ruta.get(i+1)).getEtiqueta(); // O(a)
+        }
+        return distancia;
     }
 }
