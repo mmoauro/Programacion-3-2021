@@ -6,9 +6,11 @@ import java.util.Iterator;
 
 public class GrafoDirigido<T> implements Grafo<T> {
     private HashMap<Integer, ArrayList<Arco<T>>> vertices;
+    private int cantidadArcos;
 
     public GrafoDirigido () {
         this.vertices = new HashMap<>();
+        this.cantidadArcos = 0;
     }
 
     // O(1). No se la complejidad del metodo containsKey. La complejidad de agregarVertice(vertice) depende de ese metodo.
@@ -33,14 +35,17 @@ public class GrafoDirigido<T> implements Grafo<T> {
     @Override
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
         Arco<T> arco = new Arco<T>(verticeId1, verticeId2, etiqueta);
-        if (!this.vertices.get(verticeId1).contains(arco)) // O(n)
+        if (!this.vertices.get(verticeId1).contains(arco)) { // O(n)
             this.vertices.get(verticeId1).add(arco);
+            this.cantidadArcos++;
+        }
     }
 
     // O(n) -> n = Cantidad de arcos que tiene el verticeId1
     @Override
     public void borrarArco(int verticeId1, int verticeId2) {
         this.vertices.get(verticeId1).removeIf(arco -> arco.getVerticeDestino() == verticeId2);
+        this.cantidadArcos--;
     }
 
     // O(1)
@@ -75,13 +80,10 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return this.vertices.size();
     }
 
-    // O(n) -> n = Cantidad de vertices. Asumo que el el metodo size() de ArrayList es O(1).
+    // O(1)
     @Override
     public int cantidadArcos() {
-        int total = 0;
-        for (int verticeId : this.vertices.keySet())
-            total += this.vertices.get(verticeId).size();
-        return total;
+        return this.cantidadArcos;
     }
 
     // O(1). No se la complejidad de los metodos que llamo.
@@ -90,14 +92,10 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return this.vertices.keySet().iterator();
     }
 
-    // O(n) -> n = Cantidad de arcos del vertice.
+    // O(1)
     @Override
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-        ArrayList<Integer> adyacentes = new ArrayList<>();
-        for (Arco<T> arco : this.vertices.get(verticeId)) {
-            adyacentes.add(arco.getVerticeDestino());
-        }
-        return adyacentes.iterator();
+        return new IteratorAdyacentes<T>(this.vertices.get(verticeId).iterator());
     }
 
     // O(n) -> n = Cantidad de vertices.

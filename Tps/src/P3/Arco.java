@@ -29,5 +29,15 @@ public class Arco<T> {
     public T getEtiqueta() {
         return etiqueta;
     }
+    @Override
+    public boolean equals (Object o) {
+        try {
+            Arco<T> arco = (Arco<T>) o;
+            return arco.getVerticeOrigen() == this.getVerticeOrigen() && arco.getVerticeDestino() == this.getVerticeDestino();
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
 
 }
